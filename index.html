@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ManaMitra - Emotional Companion</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f4f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .chat-container {
+      width: 90%;
+      max-width: 600px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    #chat-log {
+      border: 1px solid #ccc;
+      padding: 10px;
+      height: 300px;
+      overflow-y: auto;
+      border-radius: 8px;
+      background: #fafafa;
+      margin-bottom: 10px;
+    }
+    .msg {
+      margin: 8px 0;
+    }
+    .you {
+      color: #007a5a;
+    }
+    .bot {
+      color: #1e3a8a;
+    }
+    #user-input {
+      width: 75%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-left: 5px;
+    }
+    button:hover {
+      background-color: #388e3c;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <h1>ManaMitra - Your Emotional Companion 💬</h1>
+
+    <div id="chat-log">
+      {% for pair in history %}
+        <div class="msg you"><strong>You:</strong> {{ pair.you }}</div>
+        <div class="msg bot"><strong>ManaMitra:</strong> {{ pair.bot }}</div>
+      {% endfor %}
+    </div>
+
+    <div>
+      <input type="text" id="user-input" placeholder="Type your message..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    function appendMessage(sender, message) {
+      const div = document.createElement("div");
+      div.className = `msg ${sender === 'You' ? 'you' : 'bot'}`;
+      div.innerHTML = `<strong>${sender}:</strong> ${message}`;
+      document.getElementById("chat-log").appendChild(div);
+      div.scrollIntoView();
+    }
+
+    function sendMessage() {
+      const input = document.getElementById("user-input");
+      const message = input.value.trim();
+      if (!message) return;
+
+      appendMessage("You", message);
+      input.value = "";
+
+      fetch("/respond", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      })
+      .then(res => res.json())
+      .then(data => {
+        appendMessage("ManaMitra", data.reply);
+      });
+    }
+
+    document.getElementById("user-input").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") sendMessage();
+    });
+  </script>
+</body>
+</html>

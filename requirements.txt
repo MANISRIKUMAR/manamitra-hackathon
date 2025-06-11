@@ -2,5 +2,6 @@ flask
 firebase-admin
 google-cloud-language
 vertexai
+Flask-Session
 
- 
+

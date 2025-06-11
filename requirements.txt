@@ -2,4 +2,5 @@ flask
 firebase-admin
 google-cloud-language
 vertexai
-chart.js
+
+ 

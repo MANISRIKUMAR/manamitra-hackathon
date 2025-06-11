@@ -1,8 +1,8 @@
 # app.py
 from flask import Flask, render_template, request, jsonify, session
 from flask_session import Session
-from agents.emotional_responder import EmotionalResponder
-from agents.sentiment_analyzer import SentimentAnalyzer
+from emotional_responder import EmotionalResponder
+from sentiment_analyzer import SentimentAnalyzer
 import re
 
 app = Flask(__name__)
